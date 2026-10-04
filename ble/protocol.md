@@ -1,8 +1,25 @@
 # Kinetiq Radio Protocol
 
-Both micro:bits use built-in radio datagrams on group **42**. No separate radio
-module is required. This prototype does not use BLE roles, services, or pairing.
-This document remains in the existing `ble/` directory.
+Kinetiq uses the **built-in micro:bit radio**, not Bluetooth Low Energy (BLE),
+for wireless communication between the shoe and bracelet. No separate radio
+module is required. The `ble/` folder name is legacy; the protocol is radio.
+
+## Radio configuration
+
+| Setting | Value |
+|---|---|
+| Transport | Built-in micro:bit radio datagrams |
+| Radio group | `42` on both boards |
+| Sender | Shoe micro:bit |
+| Receiver | Bracelet micro:bit |
+| Payload | One byte containing state `0`, `1`, or `2` |
+| Send interval | 250 ms |
+
+Both boards configure `uBit.radio.setGroup(42)` and enable the radio with
+`uBit.radio.enable()`. The shoe sends with `uBit.radio.datagram.send(packet)`;
+the bracelet receives with `uBit.radio.datagram.recv()` when a
+`MICROBIT_RADIO_EVT_DATAGRAM` event arrives. No BLE pairing, central/peripheral
+roles, or GATT services are used.
 
 ## Architecture
 
